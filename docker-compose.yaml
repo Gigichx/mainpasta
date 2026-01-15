@@ -1,0 +1,48 @@
+services:
+  php-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: php-web-mysqli:latest
+    container_name: php-web-ws2
+    ports:
+      - "8082:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mysql-db
+    networks:
+      - net-ws2
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db-ws2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    volumes:
+      - mysql_data_ws2:/var/lib/mysql
+    networks:
+      - net-ws2
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-ws2
+    ports:
+      - "8083:80"
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql-db
+    networks:
+      - net-ws2
+
+volumes:
+  mysql_data_ws2:
+
+networks:
+  net-ws2:
