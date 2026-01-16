@@ -6,25 +6,27 @@
     <meta name="description" content="Maninpasta - Pasta fresca artigianale barese. Orecchiette, cavatelli e strascinati fatti a mano secondo la tradizione di Bari Vecchia.">
     <title>Maninpasta - Pasta Fresca Artigianale Barese</title>
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap');
+        
         :root {
             --primary-color: #d4a574;
             --secondary-color: #8b4513;
-            --accent-color: #2c5f2d;
+            --accent-green: #2c5f2d;
             --text-dark: #2c3e50;
+            --bg-light: #faf8f5;
         }
         
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-dark);
         }
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
                         url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23d4a574" width="1200" height="600"/><circle fill="%23c49563" cx="200" cy="150" r="80"/><circle fill="%23c49563" cx="600" cy="300" r="120"/><circle fill="%23c49563" cx="1000" cy="200" r="100"/></svg>');
             background-size: cover;
             background-position: center;
@@ -34,17 +36,36 @@
         }
         
         .hero h1 {
-            font-size: 4rem;
-            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 25px;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+        
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
         }
         
         .hero p {
             font-size: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             max-width: 700px;
             margin: 0 auto;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 300;
         }
         
         /* Section Styling */
@@ -59,18 +80,19 @@
         
         .section-title h2 {
             font-size: 2.5rem;
-            color: var(--secondary-color);
+            color: var(--text-dark);
             margin-bottom: 15px;
+            font-weight: 600;
         }
         
         .section-title p {
             font-size: 1.1rem;
-            color: #666;
+            color: #7f8c8d;
         }
         
         /* Storia Section */
         .storia-section {
-            background: #faf8f5;
+            background: white;
         }
         
         .storia-content {
@@ -82,22 +104,27 @@
         
         .storia-content p {
             margin-bottom: 20px;
+            color: #555;
         }
         
-        /* Pasta Cards */
+        /* Pasta Cards - Nuova Struttura */
+        .pasta-section {
+            background: var(--bg-light);
+        }
+        
         .pasta-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
             margin-bottom: 30px;
             height: 100%;
         }
         
         .pasta-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.2);
         }
         
         .pasta-card-image {
@@ -107,79 +134,126 @@
         }
         
         .pasta-card-body {
-            padding: 25px;
+            padding: 30px;
         }
         
         .pasta-card-body h3 {
             color: var(--secondary-color);
             font-size: 1.8rem;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
         
-        .pasta-card-body h4 {
+        .pasta-card-body .subtitle {
             color: var(--primary-color);
-            font-size: 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 15px;
         }
         
         .pasta-card-body p {
-            margin-bottom: 10px;
-            line-height: 1.6;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            color: #555;
         }
         
-        .pasta-card-footer {
-            padding: 20px 25px;
-            background: #f8f9fa;
-            border-top: 1px solid #dee2e6;
+        /* Size Selector */
+        .size-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .size-badge {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .size-badge.active {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
         }
         
         .pasta-info {
             display: flex;
             justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
             font-size: 0.9rem;
             color: #666;
         }
         
-        /* Tradizione Section */
+        /* Tradizione Section - Nuovi Colori */
         .tradizione-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #f0ebe3 100%);
         }
         
-        .tradizione-section .section-title h2,
-        .tradizione-section .section-title p {
-            color: white;
+        .tradizione-section .section-title h2 {
+            color: var(--secondary-color);
         }
         
         .tradizione-box {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            background: white;
+            border-radius: 12px;
             padding: 30px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .tradizione-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.15);
         }
         
         .tradizione-box h4 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .tradizione-box p {
+            color: #555;
+            line-height: 1.7;
+            margin: 0;
         }
         
         /* Contact Section */
         .contact-section {
-            background: #f8f9fa;
+            background: white;
         }
         
         .contact-box {
-            background: white;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 50px;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
             text-align: center;
+            color: white;
         }
         
         .contact-box h3 {
-            color: var(--secondary-color);
+            color: white;
             margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .contact-box p {
+            opacity: 0.95;
         }
         
         .btn-whatsapp {
@@ -190,18 +264,19 @@
             border-radius: 50px;
             text-decoration: none;
             display: inline-block;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
         
         .btn-whatsapp:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
             color: white;
         }
         
         /* Footer */
         footer {
-            background: var(--secondary-color);
+            background: var(--text-dark);
             color: white;
             padding: 30px 0;
             text-align: center;
@@ -211,14 +286,15 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: var(--secondary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 12px 20px;
             border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
             transition: transform 0.3s;
             z-index: 1000;
+            font-weight: 600;
         }
         
         .admin-link:hover {
@@ -238,6 +314,14 @@
             
             .section-title h2 {
                 font-size: 2rem;
+            }
+            
+            .size-selector {
+                flex-direction: column;
+            }
+            
+            .contact-box {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -281,7 +365,7 @@
     </section>
     
     <!-- I Nostri Formati Section -->
-    <section>
+    <section class="pasta-section">
         <div class="container">
             <div class="section-title">
                 <h2>I Nostri Formati</h2>
@@ -289,80 +373,43 @@
             </div>
             
             <div class="row">
-                <!-- Orecchiette Piccole -->
-                <div class="col-md-4">
+                <!-- Orecchiette - Card Unica -->
+                <div class="col-md-6">
                     <div class="pasta-card">
-                        <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop" 
-                             alt="Orecchiette Piccole" 
+                        <img src="assets/css/IMG/Orecchiette.webp" 
+                             alt="Orecchiette" 
                              class="pasta-card-image">
                         <div class="pasta-card-body">
-                            <h3>Orecchiette Piccole</h3>
-                            <h4>Il Formato Tradizionale</h4>
+                            <h3>Orecchiette</h3>
+                            <div class="subtitle">Il formato tradizionale barese</div>
                             <p>
-                                Le piccole "recchie" sono il formato classico della tradizione barese. 
-                                Perfette per trattenere il sugo, ideali con le cime di rapa o qualsiasi condimento. 
-                                Lavorate una ad una con il pollice.
+                                Le piccole "recchie" sono il simbolo della cucina pugliese. Lavorate una ad una 
+                                con il pollice, perfette per trattenere il sugo. Disponibili in tre taglie 
+                                per soddisfare ogni preferenza.
                             </p>
-                        </div>
-                        <div class="pasta-card-footer">
+                            
+                            <div class="size-selector">
+                                <div class="size-badge">
+                                    <div style="font-size: 0.75rem; opacity: 0.8;">PICCOLE</div>
+                                    <div style="margin-top: 5px;">10-12 min</div>
+                                </div>
+                                <div class="size-badge active">
+                                    <div style="font-size: 0.75rem; opacity: 0.9;">NORMALI</div>
+                                    <div style="margin-top: 5px;">12-14 min</div>
+                                </div>
+                                <div class="size-badge">
+                                    <div style="font-size: 0.75rem; opacity: 0.8;">GRANDI</div>
+                                    <div style="margin-top: 5px;">14-16 min</div>
+                                </div>
+                            </div>
+                            
                             <div class="pasta-info">
-                                <span><strong>Tempo cottura:</strong> 10-12 min</span>
-                                <span><strong>Taglia:</strong> Piccola</span>
+                                <span><strong>Ideale con:</strong> Cime di rapa, pomodoro, ragù</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Orecchiette Normali -->
-                <div class="col-md-4">
-                    <div class="pasta-card">
-                        <img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=800&h=600&fit=crop" 
-                             alt="Orecchiette Normali" 
-                             class="pasta-card-image">
-                        <div class="pasta-card-body">
-                            <h3>Orecchiette Normali</h3>
-                            <h4>Il Formato Versatile</h4>
-                            <p>
-                                La dimensione perfetta per ogni occasione. Il formato più richiesto, 
-                                ideale con sughi di carne, verdure o pesce. La scelta classica 
-                                per portare la Puglia in tavola.
-                            </p>
-                        </div>
-                        <div class="pasta-card-footer">
-                            <div class="pasta-info">
-                                <span><strong>Tempo cottura:</strong> 12-14 min</span>
-                                <span><strong>Taglia:</strong> Normale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Orecchiette Grandi -->
-                <div class="col-md-4">
-                    <div class="pasta-card">
-                        <img src="https://images.unsplash.com/photo-1611599537845-67677d89b6b4?w=800&h=600&fit=crop" 
-                             alt="Orecchiette Grandi" 
-                             class="pasta-card-image">
-                        <div class="pasta-card-body">
-                            <h3>Orecchiette Grandi</h3>
-                            <h4>Il Formato Generoso</h4>
-                            <p>
-                                Per chi ama la consistenza rustica e decisa. Le orecchiette grandi 
-                                sono perfette con sughi corposi e ricchi. Un formato che fa la differenza 
-                                nel piatto.
-                            </p>
-                        </div>
-                        <div class="pasta-card-footer">
-                            <div class="pasta-info">
-                                <span><strong>Tempo cottura:</strong> 14-16 min</span>
-                                <span><strong>Taglia:</strong> Grande</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row mt-4">
                 <!-- Cavatelli -->
                 <div class="col-md-6">
                     <div class="pasta-card">
@@ -371,14 +418,13 @@
                              class="pasta-card-image">
                         <div class="pasta-card-body">
                             <h3>Cavatelli</h3>
-                            <h4>La Tradizione Rustica</h4>
+                            <div class="subtitle">La tradizione rustica</div>
                             <p>
                                 Piccoli gnocchetti allungati con la caratteristica forma scavata al centro. 
                                 La loro consistenza porosa li rende perfetti per sughi corposi e ragù. 
                                 Un formato che esalta i sapori della terra pugliese.
                             </p>
-                        </div>
-                        <div class="pasta-card-footer">
+                            
                             <div class="pasta-info">
                                 <span><strong>Tempo cottura:</strong> 10-12 min</span>
                                 <span><strong>Formato:</strong> Corto</span>
@@ -386,23 +432,24 @@
                         </div>
                     </div>
                 </div>
-                
+            </div>
+            
+            <div class="row mt-4">
                 <!-- Cartellate -->
-                <div class="col-md-6">
+                <div class="col-md-6 mx-auto">
                     <div class="pasta-card">
                         <img src="assets/css/IMG/Cartellate.webp" 
                              alt="Cartellate" 
                              class="pasta-card-image">
                         <div class="pasta-card-body">
                             <h3>Cartellate</h3>
-                            <h4>Il Dolce della Tradizione</h4>
+                            <div class="subtitle">Il dolce della tradizione</div>
                             <p>
                                 Tipico dolce natalizio pugliese, fatto con sfoglie arrotolate a forma di rosa. 
                                 Fritte e ricoperte di miele o vincotto, rappresentano la dolcezza delle feste 
                                 secondo la tradizione di Bari Vecchia.
                             </p>
-                        </div>
-                        <div class="pasta-card-footer">
+                            
                             <div class="pasta-info">
                                 <span><strong>Preparazione:</strong> Fritte</span>
                                 <span><strong>Occasione:</strong> Natale</span>
@@ -423,7 +470,7 @@
             </div>
             
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="tradizione-box">
                         <h4>1. La Semola</h4>
                         <p>
@@ -433,7 +480,7 @@
                     </div>
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="tradizione-box">
                         <h4>2. L'Impasto</h4>
                         <p>
@@ -443,8 +490,10 @@
                         </p>
                     </div>
                 </div>
-                
-                <div class="col-md-4">
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
                     <div class="tradizione-box">
                         <h4>3. La Lavorazione</h4>
                         <p>
@@ -453,53 +502,19 @@
                         </p>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row mt-4">
-                <div class="col-md-6 mx-auto">
+                
+                <div class="col-md-6">
                     <div class="tradizione-box">
                         <h4>4. L'Essiccazione</h4>
                         <p>
                             La pasta viene lasciata asciugare naturalmente su telai di legno, 
-                            lontano da fonti di calore artificiali. Il tempo è un ingrediente fondamentale: 
-                            non si può avere fretta quando si lavora con la tradizione.
+                            lontano da fonti di calore artificiali. Il tempo è un ingrediente fondamentale.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Contact Section -->
-    <!-- <section class="contact-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Ordina la Tua Pasta</h2>
-                <p>Portiamo la tradizione barese nella tua cucina</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-8 mx-auto">
-                    <div class="contact-box">
-                        <h3>Contattaci su WhatsApp</h3>
-                        <p class="mb-4">
-                            Ordina la tua pasta fresca direttamente dal laboratorio. 
-                            Rispondiamo rapidamente a tutte le richieste e prepariamo 
-                            la tua pasta fresca su ordinazione.
-                        </p>
-                        <a href="https://wa.me/393331234567?text=Ciao!%20Vorrei%20informazioni%20sulla%20pasta%20fresca" 
-                           class="btn-whatsapp" 
-                           target="_blank">
-                            Scrivici su WhatsApp
-                        </a>
-                        <p class="mt-4 text-muted">
-                            <small>Rispondiamo dal lunedì al sabato, dalle 8:00 alle 19:00</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
     
     <!-- Footer -->
     <footer>
@@ -509,12 +524,11 @@
         </div>
     </footer>
     
-    <!-- Link Admin (nascosto) -->
+    <!-- Link Admin -->
     <a href="admin/login.php" class="admin-link" title="Area Amministratore">
-        Admin
+        🔐 Admin
     </a>
     
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

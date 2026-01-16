@@ -1,25 +1,19 @@
 <?php
 /**
  * Configurazione connessione database
- * BariPasta Manager
- * Funziona sia in locale (Docker) che su Altervista
+ * Maninpasta Manager
  */
 
-// Rileva ambiente: se esiste la variabile DOCKER, siamo in locale
-$isDocker = getenv('DOCKER_ENV') !== false || file_exists('/.dockerenv');
-
-if ($isDocker) {
-    // Configurazione LOCALE (Docker)
+// Verifica se esiste un file di configurazione locale (non tracciato da Git)
+if (file_exists(__DIR__ . '/db_local.php')) {
+    // Ambiente locale o Altervista con file personalizzato
+    require_once __DIR__ . '/db_local.php';
+} else {
+    // Configurazione di default per sviluppo Docker
     define('DB_HOST', 'mysql-db');
     define('DB_USER', 'appuser');
     define('DB_PASS', 'apppass');
     define('DB_NAME', 'appdb');
-} else {
-    // Configurazione ALTERVISTA (Produzione)
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'maninpasta');
-    define('DB_PASS', '');
-    define('DB_NAME', 'my_maninpasta');
 }
 
 // Connessione al database
