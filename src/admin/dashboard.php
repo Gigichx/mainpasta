@@ -1,7 +1,7 @@
 <?php
 /**
  * Dashboard Gestione Ordini
- * BariPasta Manager
+ * Maninpasta Manager
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -33,7 +33,7 @@ $stats = $resultStats->fetch_assoc();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - BariPasta Manager</title>
+    <title>Dashboard - Maninpasta Manager</title>
     <style>
         * {
             margin: 0;
@@ -289,8 +289,12 @@ $stats = $resultStats->fetch_assoc();
 <body>
     <!-- Header -->
     <div class="header">
-        <h1>🍝 BariPasta Manager</h1>
+        <h1>🍝 Maninpasta Manager</h1>
         <div class="header-right">
+            <div style="display: flex; gap: 15px; margin-right: 20px;">
+                <a href="dashboard.php" style="color: white; text-decoration: none; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 5px;">Ordini</a>
+                <a href="analytics.php" style="color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 16px; border-radius: 5px;">Analytics</a>
+            </div>
             <div class="user-info">
                 Benvenuto, <strong><?php echo htmlspecialchars(getNomeUtente()); ?></strong>
             </div>

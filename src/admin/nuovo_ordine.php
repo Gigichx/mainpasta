@@ -1,7 +1,7 @@
 <?php
 /**
  * Form Nuovo Ordine
- * BariPasta Manager
+ * Maninpasta Manager
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Tipi di pasta disponibili
-$tipiPasta = ['Orecchiette', 'Cavatelli', 'Strascinati', 'Troccoli', 'Maccheroncini'];
+$tipiPasta = ['Orecchiette Piccole', 'Orecchiette Normali', 'Orecchiette Grandi', 'Cavatelli', 'Cartellate'];
 $stati = ['In Attesa', 'In Lavorazione', 'Pronto', 'Consegnato'];
 $priorita_livelli = ['Bassa', 'Media', 'Alta'];
 ?>
@@ -61,7 +61,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuovo Ordine - BariPasta Manager</title>
+    <title>Nuovo Ordine - Maninpasta Manager</title>
     <style>
         * {
             margin: 0;
@@ -288,7 +288,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
 <body>
     <!-- Header -->
     <div class="header">
-        <h1>🍝 BariPasta Manager</h1>
+        <h1>🍝 Maninpasta Manager</h1>
         <div class="breadcrumb">
             <a href="dashboard.php">← Torna alla Dashboard</a>
         </div>
@@ -375,6 +375,42 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
                             placeholder="Es: 2.50"
                         >
                         <div class="helper-text">Inserire il peso in chilogrammi (es: 2.50)</div>
+                    </div>
+                </div>
+                
+                <!-- Prezzi -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prezzo_kg">
+                            Prezzo al kg (€) <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="prezzo_kg" 
+                            name="prezzo_kg" 
+                            step="0.01" 
+                            min="0"
+                            required
+                            value="<?php echo htmlspecialchars($_POST['prezzo_kg'] ?? '12.00'); ?>"
+                            placeholder="Es: 12.00"
+                        >
+                        <div class="helper-text">Prezzo di vendita per chilogrammo</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="costo_produzione_kg">
+                            Costo Produzione al kg (€)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="costo_produzione_kg" 
+                            name="costo_produzione_kg" 
+                            step="0.01" 
+                            min="0"
+                            value="<?php echo htmlspecialchars($_POST['costo_produzione_kg'] ?? '5.00'); ?>"
+                            placeholder="Es: 5.00"
+                        >
+                        <div class="helper-text">Costo di produzione per chilogrammo (opzionale)</div>
                     </div>
                 </div>
                 

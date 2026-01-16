@@ -1,7 +1,7 @@
 <?php
 /**
  * API Cambio Stato Rapido
- * BariPasta Manager
+ * Maninpasta Manager
  */
 
 require_once __DIR__ . '/../../config/db.php';

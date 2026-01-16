@@ -211,9 +211,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="divider">━━━━━━━━━━━━━━━━━━</div>
         
         <div class="alert alert-info">
-            <strong>📝 Credenziali di test:</strong><br>
-            Username: <code>admin</code><br>
-            Password: <code>bari2024</code>
         </div>
     </div>
 </body>

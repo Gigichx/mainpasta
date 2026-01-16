@@ -1,42 +1,27 @@
 <?php
 /**
- * Modifica Ordine
- * BariPasta Manager
+ * Form Nuovo Ordine
+ * Maninpasta Manager
  */
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/auth.php';
 
+// Protegge la pagina
 richiedeLogin();
 
 $messaggio = '';
 $errore = '';
-$ordine = null;
 
-// Verifica ID ordine
-$ordine_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($ordine_id <= 0) {
-    header("Location: dashboard.php");
-    exit();
-}
-
-// Carica dati ordine
-$query = "SELECT * FROM ordini WHERE id = $ordine_id";
-$result = $conn->query($query);
-
-if (!$result || $result->num_rows === 0) {
-    $errore = "Ordine non trovato";
-} else {
-    $ordine = $result->fetch_assoc();
-}
-
-// Gestione form modifica
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ordine) {
+// Gestione invio form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Raccogli dati
     $cliente_nome = pulisciInput($conn, $_POST['cliente_nome'] ?? '');
     $cliente_telefono = pulisciInput($conn, $_POST['cliente_telefono'] ?? '');
     $tipo_pasta = pulisciInput($conn, $_POST['tipo_pasta'] ?? '');
     $peso_kg = floatval($_POST['peso_kg'] ?? 0);
+    $prezzo_kg = floatval($_POST['prezzo_kg'] ?? 0);
+    $costo_produzione_kg = floatval($_POST['costo_produzione_kg'] ?? 0);
     $data_consegna = pulisciInput($conn, $_POST['data_consegna'] ?? '');
     $stato = pulisciInput($conn, $_POST['stato'] ?? 'In Attesa');
     $priorita = pulisciInput($conn, $_POST['priorita'] ?? 'Media');
@@ -49,33 +34,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ordine) {
         $errore = 'Seleziona un tipo di pasta';
     } elseif ($peso_kg <= 0) {
         $errore = 'Il peso deve essere maggiore di zero';
+    } elseif ($prezzo_kg <= 0) {
+        $errore = 'Il prezzo al kg deve essere maggiore di zero';
     } elseif (empty($data_consegna)) {
         $errore = 'La data di consegna è obbligatoria';
     } else {
-        // Aggiorna nel database
-        $query = "UPDATE ordini SET 
-                  cliente_nome = '$cliente_nome',
-                  cliente_telefono = '$cliente_telefono',
-                  tipo_pasta = '$tipo_pasta',
-                  peso_kg = $peso_kg,
-                  data_consegna = '$data_consegna',
-                  stato = '$stato',
-                  priorita = '$priorita',
-                  note = '$note'
-                  WHERE id = $ordine_id";
+        // Inserisci nel database
+        $query = "INSERT INTO ordini 
+                  (cliente_nome, cliente_telefono, tipo_pasta, peso_kg, prezzo_kg, costo_produzione_kg, data_consegna, stato, priorita, note) 
+                  VALUES 
+                  ('$cliente_nome', '$cliente_telefono', '$tipo_pasta', $peso_kg, $prezzo_kg, $costo_produzione_kg, '$data_consegna', '$stato', '$priorita', '$note')";
         
         if ($conn->query($query)) {
-            $messaggio = 'Ordine modificato con successo!';
-            // Ricarica dati aggiornati
-            $result = $conn->query("SELECT * FROM ordini WHERE id = $ordine_id");
-            $ordine = $result->fetch_assoc();
+            $messaggio = 'Ordine creato con successo! ID: ' . $conn->insert_id;
+            // Reset form
+            $_POST = array();
         } else {
-            $errore = 'Errore durante la modifica: ' . $conn->error;
+            $errore = 'Errore durante la creazione dell\'ordine: ' . $conn->error;
         }
     }
 }
 
-$tipiPasta = ['Orecchiette', 'Cavatelli', 'Strascinati', 'Troccoli', 'Maccheroncini'];
+// Tipi di pasta disponibili
+$tipiPasta = ['Orecchiette Piccole', 'Orecchiette Normali', 'Orecchiette Grandi', 'Cavatelli', 'Cartellate'];
 $stati = ['In Attesa', 'In Lavorazione', 'Pronto', 'Consegnato'];
 $priorita_livelli = ['Bassa', 'Media', 'Alta'];
 ?>
@@ -84,7 +65,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifica Ordine #<?php echo $ordine_id; ?> - BariPasta Manager</title>
+    <title>Nuovo Ordine - Maninpasta Manager</title>
     <style>
         * {
             margin: 0;
@@ -97,6 +78,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             background: #f5f6fa;
         }
         
+        /* Header */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -122,12 +104,14 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             color: white;
         }
         
+        /* Container */
         .container {
             max-width: 800px;
             margin: 30px auto;
             padding: 0 20px;
         }
         
+        /* Card form */
         .form-card {
             background: white;
             border-radius: 10px;
@@ -142,6 +126,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             border-bottom: 2px solid #f0f0f0;
         }
         
+        /* Alert */
         .alert {
             padding: 15px 20px;
             border-radius: 5px;
@@ -161,6 +146,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             border: 1px solid #f5c6cb;
         }
         
+        /* Form */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -215,6 +201,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             min-height: 100px;
         }
         
+        /* Buttons */
         .form-actions {
             display: flex;
             gap: 10px;
@@ -254,22 +241,14 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             background: #7f8c8d;
         }
         
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-            margin-left: auto;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
+        /* Helper text */
         .helper-text {
             font-size: 12px;
             color: #7f8c8d;
             margin-top: 5px;
         }
         
+        /* Radio pills */
         .radio-pills {
             display: flex;
             gap: 10px;
@@ -302,6 +281,7 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
             border-color: #667eea;
         }
         
+        /* Responsive */
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -310,162 +290,205 @@ $priorita_livelli = ['Bassa', 'Media', 'Alta'];
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
-        <h1>🍝 BariPasta Manager</h1>
+        <h1>🍝 Maninpasta Manager</h1>
         <div class="breadcrumb">
             <a href="dashboard.php">← Torna alla Dashboard</a>
         </div>
     </div>
     
+    <!-- Container -->
     <div class="container">
         <div class="form-card">
-            <?php if ($ordine): ?>
-                <h2>✏️ Modifica Ordine #<?php echo $ordine_id; ?></h2>
-                
-                <?php if ($messaggio): ?>
-                    <div class="alert alert-success">
-                        ✅ <?php echo htmlspecialchars($messaggio); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if ($errore): ?>
-                    <div class="alert alert-error">
-                        ⚠️ <?php echo htmlspecialchars($errore); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <form method="POST" action="">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="cliente_nome">
-                                Nome Cliente <span class="required">*</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                id="cliente_nome" 
-                                name="cliente_nome" 
-                                required
-                                value="<?php echo htmlspecialchars($ordine['cliente_nome']); ?>"
-                            >
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cliente_telefono">Telefono</label>
-                            <input 
-                                type="tel" 
-                                id="cliente_telefono" 
-                                name="cliente_telefono"
-                                value="<?php echo htmlspecialchars($ordine['cliente_telefono']); ?>"
-                            >
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="tipo_pasta">
-                                Tipo di Pasta <span class="required">*</span>
-                            </label>
-                            <select id="tipo_pasta" name="tipo_pasta" required>
-                                <?php foreach($tipiPasta as $tipo): ?>
-                                    <option value="<?php echo $tipo; ?>" 
-                                        <?php echo ($ordine['tipo_pasta'] === $tipo) ? 'selected' : ''; ?>>
-                                        <?php echo $tipo; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="peso_kg">
-                                Peso (kg) <span class="required">*</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                id="peso_kg" 
-                                name="peso_kg" 
-                                step="0.01" 
-                                min="0.01"
-                                required
-                                value="<?php echo $ordine['peso_kg']; ?>"
-                            >
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="data_consegna">
-                                Data Consegna <span class="required">*</span>
-                            </label>
-                            <input 
-                                type="date" 
-                                id="data_consegna" 
-                                name="data_consegna" 
-                                required
-                                value="<?php echo $ordine['data_consegna']; ?>"
-                            >
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="stato">Stato Ordine</label>
-                            <select id="stato" name="stato">
-                                <?php foreach($stati as $s): ?>
-                                    <option value="<?php echo $s; ?>" 
-                                        <?php echo ($ordine['stato'] === $s) ? 'selected' : ''; ?>>
-                                        <?php echo $s; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label>Priorità</label>
-                        <div class="radio-pills">
-                            <?php foreach($priorita_livelli as $p): ?>
-                                <div class="radio-pill">
-                                    <input 
-                                        type="radio" 
-                                        id="priorita_<?php echo strtolower($p); ?>" 
-                                        name="priorita" 
-                                        value="<?php echo $p; ?>"
-                                        <?php echo ($ordine['priorita'] === $p) ? 'checked' : ''; ?>
-                                    >
-                                    <label for="priorita_<?php echo strtolower($p); ?>">
-                                        <?php echo $p; ?>
-                                    </label>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="note">Note</label>
-                        <textarea 
-                            id="note" 
-                            name="note"
-                        ><?php echo htmlspecialchars($ordine['note']); ?></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            💾 Salva Modifiche
-                        </button>
-                        <a href="dashboard.php" class="btn btn-secondary">
-                            ✖️ Annulla
-                        </a>
-                        <a href="elimina_ordine.php?id=<?php echo $ordine_id; ?>" 
-                           class="btn btn-danger"
-                           onclick="return confirm('Sei sicuro di voler eliminare questo ordine?')">
-                            🗑️ Elimina
-                        </a>
-                    </div>
-                </form>
-            <?php else: ?>
-                <div class="alert alert-error">
-                    ⚠️ Ordine non trovato
+            <h2>➕ Nuovo Ordine</h2>
+            
+            <?php if ($messaggio): ?>
+                <div class="alert alert-success">
+                    ✅ <?php echo htmlspecialchars($messaggio); ?>
+                    <br><br>
+                    <a href="dashboard.php" class="btn btn-primary">Torna alla Dashboard</a>
                 </div>
-                <a href="dashboard.php" class="btn btn-primary">Torna alla Dashboard</a>
             <?php endif; ?>
+            
+            <?php if ($errore): ?>
+                <div class="alert alert-error">
+                    ⚠️ <?php echo htmlspecialchars($errore); ?>
+                </div>
+            <?php endif; ?>
+            
+            <form method="POST" action="">
+                
+                <!-- Dati Cliente -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cliente_nome">
+                            Nome Cliente <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="cliente_nome" 
+                            name="cliente_nome" 
+                            required
+                            value="<?php echo htmlspecialchars($_POST['cliente_nome'] ?? ''); ?>"
+                            placeholder="Es: Mario Rossi"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cliente_telefono">Telefono</label>
+                        <input 
+                            type="tel" 
+                            id="cliente_telefono" 
+                            name="cliente_telefono"
+                            value="<?php echo htmlspecialchars($_POST['cliente_telefono'] ?? ''); ?>"
+                            placeholder="Es: 3331234567"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Tipo Pasta e Peso -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tipo_pasta">
+                            Tipo di Pasta <span class="required">*</span>
+                        </label>
+                        <select id="tipo_pasta" name="tipo_pasta" required>
+                            <option value="">-- Seleziona --</option>
+                            <?php foreach($tipiPasta as $tipo): ?>
+                                <option value="<?php echo $tipo; ?>" 
+                                    <?php echo (($_POST['tipo_pasta'] ?? '') === $tipo) ? 'selected' : ''; ?>>
+                                    <?php echo $tipo; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peso_kg">
+                            Peso (kg) <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="peso_kg" 
+                            name="peso_kg" 
+                            step="0.01" 
+                            min="0.01"
+                            required
+                            value="<?php echo htmlspecialchars($_POST['peso_kg'] ?? ''); ?>"
+                            placeholder="Es: 2.50"
+                        >
+                        <div class="helper-text">Inserire il peso in chilogrammi (es: 2.50)</div>
+                    </div>
+                </div>
+                
+                <!-- Prezzi -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prezzo_kg">
+                            Prezzo al kg (€) <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="prezzo_kg" 
+                            name="prezzo_kg" 
+                            step="0.01" 
+                            min="0"
+                            required
+                            value="<?php echo htmlspecialchars($_POST['prezzo_kg'] ?? '12.00'); ?>"
+                            placeholder="Es: 12.00"
+                        >
+                        <div class="helper-text">Prezzo di vendita per chilogrammo</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="costo_produzione_kg">
+                            Costo Produzione al kg (€)
+                        </label>
+                        <input 
+                            type="number" 
+                            id="costo_produzione_kg" 
+                            name="costo_produzione_kg" 
+                            step="0.01" 
+                            min="0"
+                            value="<?php echo htmlspecialchars($_POST['costo_produzione_kg'] ?? '5.00'); ?>"
+                            placeholder="Es: 5.00"
+                        >
+                        <div class="helper-text">Costo di produzione per chilogrammo (opzionale)</div>
+                    </div>
+                </div>
+                
+                <!-- Data Consegna e Stato -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="data_consegna">
+                            Data Consegna <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="data_consegna" 
+                            name="data_consegna" 
+                            required
+                            value="<?php echo htmlspecialchars($_POST['data_consegna'] ?? date('Y-m-d')); ?>"
+                            min="<?php echo date('Y-m-d'); ?>"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stato">Stato Ordine</label>
+                        <select id="stato" name="stato">
+                            <?php foreach($stati as $s): ?>
+                                <option value="<?php echo $s; ?>" 
+                                    <?php echo (($_POST['stato'] ?? 'In Attesa') === $s) ? 'selected' : ''; ?>>
+                                    <?php echo $s; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Priorità -->
+                <div class="form-group full-width">
+                    <label>Priorità</label>
+                    <div class="radio-pills">
+                        <?php foreach($priorita_livelli as $p): ?>
+                            <div class="radio-pill">
+                                <input 
+                                    type="radio" 
+                                    id="priorita_<?php echo strtolower($p); ?>" 
+                                    name="priorita" 
+                                    value="<?php echo $p; ?>"
+                                    <?php echo (($_POST['priorita'] ?? 'Media') === $p) ? 'checked' : ''; ?>
+                                >
+                                <label for="priorita_<?php echo strtolower($p); ?>">
+                                    <?php echo $p; ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                
+                <!-- Note -->
+                <div class="form-group full-width">
+                    <label for="note">Note</label>
+                    <textarea 
+                        id="note" 
+                        name="note"
+                        placeholder="Es: Richiesta pasta senza glutine, consegna ore 14:00..."
+                    ><?php echo htmlspecialchars($_POST['note'] ?? ''); ?></textarea>
+                </div>
+                
+                <!-- Azioni -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Salva Ordine
+                    </button>
+                    <a href="dashboard.php" class="btn btn-secondary">
+                        ✖️ Annulla
+                    </a>
+                </div>
+                
+            </form>
         </div>
     </div>
 </body>
