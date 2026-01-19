@@ -376,7 +376,7 @@
                 <!-- Orecchiette - Card Unica -->
                 <div class="col-md-6">
                     <div class="pasta-card">
-                        <img src="assets/css/IMG/Orecchiette.webp" 
+                        <img src="src/assets/css/IMG/Orecchiette.webp" 
                              alt="Orecchiette" 
                              class="pasta-card-image">
                         <div class="pasta-card-body">
@@ -438,7 +438,7 @@
                 <!-- Cartellate -->
                 <div class="col-md-6 mx-auto">
                     <div class="pasta-card">
-                        <img src="assets/css/IMG/Cartellate.webp" 
+                        <img src="src/assets/css/IMG/Cartellate.webp" 
                              alt="Cartellate" 
                              class="pasta-card-image">
                         <div class="pasta-card-body">
@@ -525,9 +525,9 @@
     </footer>
     
     <!-- Link Admin -->
-    <a href="admin/login.php" class="admin-link" title="Area Amministratore">
-        🔐 Admin
-    </a>
+<a href="src/admin/login.php" class="admin-link" title="Area Amministratore">
+    🔐 Admin
+</a>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

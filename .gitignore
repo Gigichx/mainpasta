@@ -1,26 +1,22 @@
 # File di configurazione locale (credenziali database)
-config/db_local.php
+src/config/db_local.php
 
-# File di test (da non pubblicare)
+# File di test
 test_*.php
 src/test_*.php
 
-# File temporanei
+# Temporanei
 *.log
 *.tmp
 
-# macOS
+# OS
 .DS_Store
-
-# Windows
 Thumbs.db
 
 # Editor
 .vscode/
 .idea/
 *.swp
-*.swo
 
 # Backup
 *.bak
-*.backup
